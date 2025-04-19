@@ -32,7 +32,28 @@ This software is designed **ONLY** for educational purposes to understand:
 
 ## Installation
 
-1. Clone this repository:  
+1. Clone this repository
 bash
 ```
 git clone https://github.com/username/RansomwareSimulator.git
+```
+2. Install Required Dependencies
+Open Command Prompt or PowerShell and run:  
+bash
+```
+pip install cryptography pillow
+```
+3. Run the ransomware  
+bash
+```
+python ransomware_simulator.py
+```
+⚠️ Run only in test folders with non-important files!
+
+## 🔐 How It Works
+
+-Encrypts .txt, .png, .jpg, and other common file types in a selected directory
+-Uses Fernet symmetric encryption
+-GUI displays a "ransom note" interface with a decryption field
+-Built-in key ensures all files can be safely restored during simulation
+
