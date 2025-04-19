@@ -57,3 +57,6 @@ python ransomware_simulator.py
 - GUI displays a "ransom note" interface with a decryption field
 - Built-in key ensures all files can be safely restored during simulation
 
+## 📝 License
+Licensed under the MIT License. See the LICENSE file for more details.
+
