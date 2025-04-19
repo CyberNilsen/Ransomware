@@ -52,8 +52,8 @@ python ransomware_simulator.py
 
 ## 🔐 How It Works
 
--Encrypts .txt, .png, .jpg, and other common file types in a selected directory
--Uses Fernet symmetric encryption
--GUI displays a "ransom note" interface with a decryption field
--Built-in key ensures all files can be safely restored during simulation
+- Encrypts .txt, .png, .jpg, and other common file types in a selected directory
+- Uses Fernet symmetric encryption
+- GUI displays a "ransom note" interface with a decryption field
+- Built-in key ensures all files can be safely restored during simulation
 
