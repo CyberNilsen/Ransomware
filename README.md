@@ -32,7 +32,7 @@ This software is designed **ONLY** for educational purposes to understand:
 
 ## Installation
 
-1. Clone this repository:
+1. Clone this repository:  
 bash
 ```
 git clone https://github.com/username/RansomwareSimulator.git
