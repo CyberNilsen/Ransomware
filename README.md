@@ -32,20 +32,20 @@ This software is designed **ONLY** for educational purposes to understand:
 
 ## Installation
 
-1. Clone this repository
-bash
-```
+1. Clone this repository  
+
+```bash
 git clone https://github.com/username/RansomwareSimulator.git
 ```
 2. Install Required Dependencies
 Open Command Prompt or PowerShell and run:  
-bash
-```
+
+```bash
 pip install cryptography pillow
 ```
-3. Run the ransomware  
-bash
-```
+3. Run the ransomware   
+
+```bash
 python ransomware_simulator.py
 ```
 ⚠️ Run only in test folders with non-important files!
