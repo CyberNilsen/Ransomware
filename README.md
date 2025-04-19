@@ -4,6 +4,7 @@ A Python-based educational tool designed to demonstrate how ransomware works in 
 
 ![Ransomware](https://github.com/user-attachments/assets/d11d825f-a5ec-40d0-a28a-96716b100c57)
 
+---
 
 ## ⚠️ EDUCATIONAL PURPOSE ONLY ⚠️
 
@@ -15,12 +16,16 @@ This software is designed **ONLY** for educational purposes to understand:
 
 **NEVER** use this code for malicious purposes. Unauthorized encryption of files is illegal and unethical.
 
+---
+
 ## Features
 
 - **File Encryption/Decryption**: Simulates how ransomware encrypts and decrypts files
 - **Interactive GUI**: Recreates the look and feel of ransomware interfaces
 - **Safe Environment**: Includes built-in protection mechanisms (predefined password)
 - **Educational Comments**: Code is thoroughly commented to explain functionality
+
+---
 
 ## Technologies Used
 
@@ -29,6 +34,8 @@ This software is designed **ONLY** for educational purposes to understand:
 - **PIL (Pillow)**: Image processing
 - **Cryptography**: Fernet symmetric encryption
 - **Hashlib**: Password hashing
+
+---
 
 ## Installation
 
@@ -50,6 +57,8 @@ python ransomware_simulator.py
 ```
 ⚠️ Run only in test folders with non-important files!
 
+---
+
 ## 🔐 How It Works
 
 - Encrypts .txt, .png, .jpg, and other common file types in a selected directory
@@ -57,6 +66,13 @@ python ransomware_simulator.py
 - GUI displays a "ransom note" interface with a decryption field
 - Built-in key ensures all files can be safely restored during simulation
 
-## 📝 License
-Licensed under the MIT License. See the LICENSE file for more details.
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+> Developed with curiosity and passion by Andreas ([CyberNilsen](https://github.com/CyberNilsen))
 
