@@ -1,6 +1,6 @@
 # Ransomware
 
-A Python-based educational tool designed to demonstrate how ransomware works in a controlled environment. This project is created strictly for cybersecurity education and Python learning purposes.
+A Python-based educational tool designed to learn how ransomware works in a controlled environment. This project is created strictly for cybersecurity education and Python learning purposes.
 
 ![Ransomware](https://github.com/user-attachments/assets/d11d825f-a5ec-40d0-a28a-96716b100c57)
 
