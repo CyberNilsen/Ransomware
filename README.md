@@ -42,7 +42,7 @@ This software is designed **ONLY** for educational purposes to understand:
 1. Clone this repository  
 
 ```bash
-git clone https://github.com/username/RansomwareSimulator.git
+git clone https://github.com/CyberNilsen/Ransomware.git
 ```
 2. Install Required Dependencies
 Open Command Prompt or PowerShell and run:  
